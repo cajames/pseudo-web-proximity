@@ -1,9 +1,18 @@
+<script>
+import { Vue, Component, Prop } from "vue-property-decorator";
+import AppHeader from "@/components/Header.vue";
+
+@Component({
+  components: {
+    AppHeader
+  }
+})
+export default class App extends Vue {}
+</script>
+
 <template>
-  <div id="app" class="font-sans">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <div id="app" class="font-sans leading-normal tracking-normal">
+    <app-header></app-header>
     <router-view/>
   </div>
 </template>

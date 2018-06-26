@@ -1,19 +1,33 @@
 <template>
-  <div class="container mx-auto">
-	<div v-if="cameraAvailable">
-		<video ref="video" width="100" height="100" autoplay></video>
-		<canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
-	</div>
-	<div v-else>
-		<span class="text-xl">Camera not available.</span>
-	</div>
+  <div class="container text-white mx-auto bg-blue-dark h-screen flex flex-col justify-center pt-8 text-center">
 
-	<div class="text-center">
-		<span v-if="isCovered" class="block">Covered</span>
-		<span v-else class="block">Not Covered</span>
-		<span>{{countChanges}} changes</span>
-	</div>
-	<span>Brightness: {{brightness}}</span>
+    <!-- Warning -->
+    <div class="bg-blue mx-4 rounded mb-8 p-4" v-if="!cameraAvailable">
+      <span>The camera is required for this to work</span>
+    </div>
+
+    <!-- Text -->
+    <div class="text-white mb-8 text-4xl">
+      <span v-if="isCovered" class="block">Covered</span>
+      <span v-else class="block">Not Covered</span>
+      <span class="text-10xl font-bold">{{countChanges}}</span>
+    </div>
+
+    <!-- Camera Details -->
+    <div v-show="showDetails" class="pt-2 bg-blue mx-4 p-4 rounded" >
+      <div v-if="cameraAvailable" class="flex flex-col items-center">
+        <video ref="video" width="100" height="100" autoplay></video>
+        <canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
+        <span class="text-white">Brightness: {{brightness}}</span>
+      </div>
+      <span v-else class="text-xl">Camera not available.</span>
+    </div>
+
+    <!-- Footer -->
+    <button @click="toggleDetails" class="fixed pin-b bg-blue p-4 w-full shadow-md text-white">
+      <span v-if="!showDetails">Show details</span>
+      <span v-else>Hide details</span>
+    </button>
 
   </div>
 </template>
@@ -31,6 +45,7 @@ export default class Home extends Vue {
   brightness: any = null;
   interval: any = null;
   countChanges: number = 0;
+  showDetails: boolean = false;
 
   created() {
     this.setupVideoStream();
@@ -40,6 +55,10 @@ export default class Home extends Vue {
     if (this.interval) {
       clearInterval(this.interval);
     }
+  }
+
+  toggleDetails() {
+    this.showDetails = !this.showDetails;
   }
 
   get isCovered() {

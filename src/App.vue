@@ -11,7 +11,7 @@ export default class App extends Vue {}
 </script>
 
 <template>
-  <div id="app" class="font-sans leading-normal tracking-normal">
+  <div id="app" class="font-sans leading-normal tracking-normal bg-blue-dark">
     <app-header></app-header>
     <router-view/>
   </div>

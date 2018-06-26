@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-white mx-auto bg-blue-dark h-screen flex flex-col justify-center pt-8 text-center">
+  <div class="container mx-auto text-white text-center h-screen flex flex-col justify-center pt-8">
 
     <!-- Warning -->
     <div class="bg-blue mx-4 rounded mb-8 p-4" v-if="!cameraAvailable">
@@ -18,13 +18,21 @@
       <div v-if="cameraAvailable" class="flex flex-col items-center">
         <video ref="video" width="100" height="100" autoplay></video>
         <canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
-        <span class="text-white">Brightness: {{brightness}}</span>
+        <span class="text-white mb-2">Brightness: {{brightness}}</span>
+        <div class="flex mb-2">
+          <label for="treshold" class="mr-2">Treshold:</label>
+          <input type="text" name="treshold" v-model="treshold">
+        </div>
+        <div class="flex mb-2">
+          <label for="refresh" class="mr-2">Refresh:</label>
+          <input type="text" name="refresh" v-model="refresh">
+        </div>
       </div>
       <span v-else class="text-xl">Camera not available.</span>
     </div>
 
     <!-- Footer -->
-    <button @click="toggleDetails" class="fixed pin-b bg-blue p-4 w-full shadow-md text-white">
+    <button @click="toggleDetails" class="fixed pin-b pin-x bg-blue p-4 w-screen shadow-md text-white">
       <span v-if="!showDetails">Show details</span>
       <span v-else>Hide details</span>
     </button>
@@ -46,6 +54,8 @@ export default class Home extends Vue {
   interval: any = null;
   countChanges: number = 0;
   showDetails: boolean = false;
+  treshold: number = 25;
+  refresh: number = 50;
 
   created() {
     this.setupVideoStream();
@@ -62,7 +72,7 @@ export default class Home extends Vue {
   }
 
   get isCovered() {
-    if (this.brightness < 25) {
+    if (this.brightness < this.treshold) {
       return true;
     }
     return false;
@@ -78,7 +88,7 @@ export default class Home extends Vue {
   startIntervalScan() {
     this.interval = setInterval(() => {
       this.renderImageFromWebcam();
-    }, 50);
+    }, this.refresh);
   }
 
   calculateImageData() {
@@ -122,7 +132,10 @@ export default class Home extends Vue {
         this.cameraAvailable = true;
 
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: true
+          video: {
+            facingMode: "user"
+          },
+          audio: false
         });
 
         this.video = this.$refs["video"];

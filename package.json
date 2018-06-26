@@ -53,5 +53,8 @@
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "now": {
+    "alias": "prox.xn--wxa.wtf"
   }
 }

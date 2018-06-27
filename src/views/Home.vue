@@ -21,11 +21,11 @@
         <span class="text-white mb-2">Brightness: {{brightness}}</span>
         <div class="flex mb-2">
           <label for="treshold" class="mr-2">Treshold:</label>
-          <input type="text" name="treshold" v-model="treshold">
+          <input type="number" name="treshold" v-model="treshold">
         </div>
         <div class="flex mb-2">
           <label for="refresh" class="mr-2">Refresh:</label>
-          <input type="text" name="refresh" v-model="refresh">
+          <input type="number" name="refresh" v-model="refresh">
         </div>
       </div>
       <span v-else class="text-xl">Camera not available.</span>

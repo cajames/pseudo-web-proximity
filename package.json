@@ -54,6 +54,9 @@
       "git add"
     ]
   },
+  "engines": {
+    "node": "10.x.x"
+  },
   "now": {
     "alias": "prox.xn--wxa.wtf"
   }

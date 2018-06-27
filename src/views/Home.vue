@@ -16,7 +16,7 @@
     <!-- Camera Details -->
     <div v-show="showDetails" class="pt-2 bg-blue mx-4 p-4 rounded" >
       <div v-if="cameraAvailable" class="flex flex-col items-center">
-        <video ref="video" width="100" height="100" autoplay></video>
+        <video ref="video" width="100" height="100" playsinline controls autoplay></video>
         <canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
         <span class="text-white mb-2">Brightness: {{brightness}}</span>
         <div class="flex mb-2">
@@ -109,41 +109,80 @@ export default class Home extends Vue {
     this.brightness = brightness;
   }
 
-  incrementCount = debounce(
-    () => {
-      console.log("whaaaa", this, this.countChanges);
-      debugger;
-      this.countChanges = this.countChanges + 1;
-    },
-    100,
-    { leading: true }
-  );
-
   updateCoverCount(newVal: boolean, oldVal: boolean) {
     if (newVal === true && oldVal === false) {
       this.countChanges += 1;
     }
   }
 
-  async setupVideoStream() {
+  //#region promise video
+  // async setupVideoStream() {
+  //   try {
+  //     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+  //       console.log('Video was allowed')
+  //       // Video was allowed
+  //       this.cameraAvailable = true;
+
+  //       const stream = await navigator.mediaDevices.getUserMedia({
+  //         video: {
+  //           facingMode: "user"
+  //         },
+  //         audio: false
+  //       });
+
+  //       console.log('Got the stream')
+
+  //       this.video = this.$refs["video"];
+  //       const canvas: any = this.$refs["canvas"];
+  //       this.context = canvas.getContext("2d");
+  //       this.video.src = window.URL.createObjectURL(stream);
+
+  //       console.log('Setup video')
+
+  //       this.startIntervalScan();
+
+  //       console.log('Started Scan')
+  //     }
+  //   } catch (error) {
+  //     console.log("Failed to get camera access.");
+  //     this.cameraAvailable = false;
+  //   }
+  // }
+  //#endregion
+
+  setupVideoStream() {
+    navigator.getUserMedia =
+      navigator.getUserMedia ||
+      (navigator as any).webkitGetUserMedia ||
+      (navigator as any).mozGetUserMedia;
+
     try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      if (navigator.getUserMedia) {
+        console.log("Video was allowed");
         // Video was allowed
         this.cameraAvailable = true;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
+        const videoContraints = {
           video: {
             facingMode: "user"
           },
           audio: false
-        });
+        };
 
-        this.video = this.$refs["video"];
-        const canvas: any = this.$refs["canvas"];
-        this.context = canvas.getContext("2d");
-        this.video.src = window.URL.createObjectURL(stream);
-
-        this.startIntervalScan();
+        navigator.getUserMedia(
+          videoContraints,
+          stream => {
+            this.video = this.$refs["video"];
+            const canvas: any = this.$refs["canvas"];
+            this.context = canvas.getContext("2d");
+            this.video.src = window.URL.createObjectURL(stream);
+            this.startIntervalScan();
+          },
+          err => {
+            throw err;
+          }
+        );
       }
     } catch (error) {
       console.log("Failed to get camera access.");

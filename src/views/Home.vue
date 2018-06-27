@@ -16,7 +16,7 @@
     <!-- Camera Details -->
     <div v-show="showDetails" class="pt-2 bg-blue mx-4 p-4 rounded" >
       <div v-if="cameraAvailable" class="flex flex-col items-center">
-        <video ref="video" width="100" height="100" playsinline controls autoplay></video>
+        <video ref="video" width="100" height="100" autoplay></video>
         <canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
         <span class="text-white mb-2">Brightness: {{brightness}}</span>
         <div class="flex mb-2">
@@ -173,10 +173,11 @@ export default class Home extends Vue {
         navigator.getUserMedia(
           videoContraints,
           stream => {
-            this.video = this.$refs["video"];
+            const video: any = this.$refs["video"];
             const canvas: any = this.$refs["canvas"];
             this.context = canvas.getContext("2d");
-            this.video.src = window.URL.createObjectURL(stream);
+            this.video = video;
+            video.srcObject = stream;
             this.startIntervalScan();
           },
           err => {

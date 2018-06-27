@@ -16,7 +16,7 @@
     <!-- Camera Details -->
     <div v-show="showDetails" class="pt-2 bg-blue mx-4 p-4 rounded" >
       <div v-if="cameraAvailable" class="flex flex-col items-center">
-        <video ref="video" width="100" height="100" autoplay></video>
+        <video ref="video" width="100" height="100" playsinline autoplay></video>
         <canvas class="hidden" ref="canvas" width="100" height="100"></canvas>
         <span class="text-white mb-2">Brightness: {{brightness}}</span>
         <div class="flex mb-2">
